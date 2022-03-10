@@ -1,0 +1,1 @@
+This is a terminal-based clash of clans clone built using python

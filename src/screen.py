@@ -1,4 +1,4 @@
-import src.utils as utils
+import src.constants as utils
 import numpy as np
 
 class Screen:

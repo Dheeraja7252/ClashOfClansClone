@@ -1,5 +1,5 @@
 from src.game import Game
-from src.utils import CLEAR
+from src.constants import CLEAR
 
 
 print(CLEAR)

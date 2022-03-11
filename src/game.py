@@ -1,8 +1,9 @@
 from time import monotonic as clock
 
-from src.player import Player
+from src.king import King
 from src.screen import Screen
-import src.utils as utils
+import src.constants as utils
+from src.constants import *
 
 import sys
 import termios
@@ -16,7 +17,7 @@ class Game:
         self._height = utils.SCREEN_HEIGHT
         self._screen = Screen(self._width, self._height)
 
-        self._player = Player(10, 10, 5, 5)
+        self._king = King(10, 10, 5, 5)
 
 
     def render(self):
@@ -27,15 +28,16 @@ class Game:
             dr, dw, de = select([sys.stdin], [], [], 0)
             if dr != []:
                 if sys.stdin.read(1) == 'w':
-                    self._player.pos_x += 1
+                    self._king._pos_x += 1
 
             self._draw_objects()
 
-            while clock() - start_time < 1:
+            while clock() - start_time < TIME_BW_FRAMES:
                 pass
             self._screen.display_map()
             print(frame)
             frame += 1
 
     def _draw_objects(self):
-        self._screen.add_object(self._player.pos_x, self._player.pos_y, self._player.object)
+        pos_x, pos_y = self._king.get_position()
+        self._screen.add_object(pos_x, pos_y, self._king.object)

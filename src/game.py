@@ -13,12 +13,9 @@ from src.utils import *
 
 
 # TODO:
-# modify cannons?
 # Game speed
 # Spells?
 # Replays
-# flash on attack
-# score, health display
 
 class Game:
     def __init__(self):
@@ -70,29 +67,26 @@ class Game:
             while clock() - start_time < TIME_BW_FRAMES:
                 pass
             self._screen.display_map()
-            print(frame)
+            health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
+            print("Player health: " + health_bar)
+            print("Time played: ", frame)
             frame += 1
 
     def _draw_objects(self):
         self._screen.clear_map()
 
-        pos_x, pos_y = self._king.get_position()
         self._screen.add_object(self._king)
 
         for wall in self._walls:
-            pos_x, pos_y = wall.get_position()
             self._screen.add_object(wall)
 
         for building in self._buildings:
-            pos_x, pos_y = building.get_position()
             self._screen.add_object(building)
 
         for barb in self._barbarians:
-            pos_x, pos_y = barb.get_position()
             self._screen.add_object(barb)
 
         for cannon in self._cannons:
-            pos_x, pos_y = cannon.get_position()
             self._screen.add_object(cannon)
 
     def handle_kb_input(self):
@@ -115,10 +109,23 @@ class Game:
 
     def game_over(self, win):
         print(CLEAR)
+        print(RESET_CURSOR)
+        for _ in range(int(self._height/2)):
+            print('')
+
+
         if win:
-            print("win")
+            print(Fore.GREEN)
+            print_centered("You win!")
+            print(Fore.RESET)
         else:
-            print("lose")
+            print(Fore.RED)
+            print_centered("You Lose!")
+            print(Fore.RESET)
+
+        for _ in range(int(self._height / 2)):
+            print('')
+
         colorama.deinit()
         raise SystemExit
 

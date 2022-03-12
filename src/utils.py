@@ -2,6 +2,10 @@ import sys
 import termios
 from select import select
 
+from colorama import Back
+
+from src.constants import SCREEN_WIDTH
+
 
 def getch():
     return sys.stdin.read(1)
@@ -49,3 +53,21 @@ def get_distance(obj1, obj2):
         dy = pos_y1 - (pos_y2 + width2)
 
     return dx + dy
+
+def progress_bar(val, max_val, num_div):
+    num_filled = int((val / max_val) * num_div) + 1
+    num_filled = min(num_filled, num_div)
+
+    filled = ' ' * num_filled
+    empty = ' ' * (num_div - num_filled)
+
+    res = Back.GREEN + filled + Back.RESET + empty
+    return res
+
+def print_centered(text):
+    num_space = int((SCREEN_WIDTH - len(text)) / 2)
+    for _ in range(num_space):
+        print(' ', end='')
+    print(text)
+    # for _ in range(num_space):
+    #     print(' ', end='')

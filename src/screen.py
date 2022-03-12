@@ -53,11 +53,10 @@ class Screen:
         if pos_x in range(self._height) and pos_y in range(self._width):
             self._base_map[pos_x][pos_y] = ch
 
-    # TODO: add colour
     def display_map(self):
         print(utils.RESET_CURSOR)
         for i in range(self._height):
             for j in range(self._width):
                 print(self._map[i][j], end='')
-                # print(Fore.RESET)
             print("")
+        # print(self._map)

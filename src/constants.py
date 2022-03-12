@@ -59,6 +59,5 @@ CANNON_WIDTH = 1
 CANNON_DAMAGE = 5
 CANNON_RANGE = 10
 CANNON_COOL_OFF = 0.5
-CANNON_POS = [[14, 55], [10, 70]]
+CANNON_POS = [[14, 55], [10, 70], [14, 30]]
 
-# TODO: get objects from map

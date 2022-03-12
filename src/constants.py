@@ -1,5 +1,7 @@
 from colorama import Fore, Back, Style
 
+GAME_ID_LEN = 6
+
 RESET_CURSOR = "\033[0;0H"
 CLEAR = "\033[2J"
 

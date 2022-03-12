@@ -22,6 +22,7 @@ class Game:
         self._width = SCREEN_WIDTH
         self._height = SCREEN_HEIGHT
         self._screen = Screen(self._width, self._height)
+        self._game_id = gen_game_id()
 
         # create game objects
         self._king = King(KING_POS_X, KING_POS_Y)
@@ -66,10 +67,11 @@ class Game:
 
             while clock() - start_time < TIME_BW_FRAMES:
                 pass
-            self._screen.display_map()
+            # self._screen.display_map()
             health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
             print("Player health: " + health_bar)
             print("Time played: ", frame)
+            print("Game id : ", self._game_id)
             frame += 1
 
     def _draw_objects(self):

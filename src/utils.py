@@ -1,10 +1,12 @@
+import string
 import sys
 import termios
+from random import choice
 from select import select
 
 from colorama import Back
 
-from src.constants import SCREEN_WIDTH
+from src.constants import SCREEN_WIDTH, GAME_ID_LEN
 
 
 def getch():
@@ -61,7 +63,7 @@ def progress_bar(val, max_val, num_div):
     filled = ' ' * num_filled
     empty = ' ' * (num_div - num_filled)
 
-    res = Back.GREEN + filled + Back.RESET + empty
+    res = Back.LIGHTCYAN_EX + filled + Back.RESET + empty
     return res
 
 def print_centered(text):
@@ -71,3 +73,6 @@ def print_centered(text):
     print(text)
     # for _ in range(num_space):
     #     print(' ', end='')
+
+def gen_game_id():
+    return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(GAME_ID_LEN))

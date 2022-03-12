@@ -3,6 +3,7 @@ import numpy as np
 from colorama import Fore, Back, Style
 
 from src.cannon import Cannon
+from src.king import King
 
 
 class Screen:
@@ -31,7 +32,7 @@ class Screen:
         if pos_x + obj_width < 0 and pos_y + obj_height < 0:
             return
 
-        if obj.fore == Fore.RED:
+        if type(obj) == King and obj.fore == Fore.RED:
             if obj.style == Style.DIM:
                 obj.style = Style.NORMAL
             else:

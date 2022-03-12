@@ -1,5 +1,7 @@
 from time import monotonic as clock
 
+import colorama
+
 from src.barbarian import Barbarian
 from src.cannon import Cannon
 from src.game_obj import GameObject
@@ -10,12 +12,12 @@ from src.constants import *
 from src.utils import *
 
 
-# Tasks left:
+# TODO:
 # modify cannons?
 # Game speed
 # Spells?
 # Replays
-# colour based on health
+# flash on attack
 # score, health display
 
 class Game:
@@ -75,23 +77,23 @@ class Game:
         self._screen.clear_map()
 
         pos_x, pos_y = self._king.get_position()
-        self._screen.add_object(pos_x, pos_y, self._king._object)
+        self._screen.add_object(self._king)
 
         for wall in self._walls:
             pos_x, pos_y = wall.get_position()
-            self._screen.add_object(pos_x, pos_y, wall._object)
+            self._screen.add_object(wall)
 
         for building in self._buildings:
             pos_x, pos_y = building.get_position()
-            self._screen.add_object(pos_x, pos_y, building._object)
+            self._screen.add_object(building)
 
         for barb in self._barbarians:
             pos_x, pos_y = barb.get_position()
-            self._screen.add_object(pos_x, pos_y, barb._object)
+            self._screen.add_object(barb)
 
         for cannon in self._cannons:
             pos_x, pos_y = cannon.get_position()
-            self._screen.add_object(pos_x, pos_y, cannon._object)
+            self._screen.add_object(cannon)
 
     def handle_kb_input(self):
         if not key_press():
@@ -117,6 +119,7 @@ class Game:
             print("win")
         else:
             print("lose")
+        colorama.deinit()
         raise SystemExit
 
     def handle_collisions(self):
@@ -236,14 +239,6 @@ class Game:
                     barb.last_attack_time = cur_time
                     break
 
-            # if cur_time < barb.last_attack_time + BARB_ATTACK_TIMESTEP:
-            #     continue
-            # for wall in self._walls:
-            #     if get_distance(barb, wall) < 1:
-            #         wall.deal_damage(barb.damage)
-            #         barb.last_attack_time = cur_time
-            #         break
-
     def cannons_fire(self):
         for cannon in self._cannons:
             if clock() < cannon.last_fired + CANNON_COOL_OFF:
@@ -256,3 +251,4 @@ class Game:
             if get_distance(target, cannon) <= cannon.range:
                 target.deal_damage(cannon.damage)
                 cannon.last_fired = clock()
+                cannon.style = Style.BRIGHT

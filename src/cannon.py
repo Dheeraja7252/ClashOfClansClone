@@ -8,3 +8,4 @@ class Cannon(GameObject):
         self.damage = CANNON_DAMAGE
         self.last_fired = 0
         self.range = CANNON_RANGE
+        self.fore = Fore.RESET

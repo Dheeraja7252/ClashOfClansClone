@@ -1,3 +1,5 @@
+from colorama import Fore, Back, Style
+
 RESET_CURSOR = "\033[0;0H"
 CLEAR = "\033[2J"
 
@@ -8,6 +10,9 @@ BG_CHAR = ' '
 BORDER_CHAR = '#'
 
 TIME_BW_FRAMES = 0.2
+
+HEALTH_RANGE = [30, 60]
+OBJECT_COLOUR = [Fore.RED, Fore.YELLOW]
 
 # Game object properties
 KING_HEIGHT = 1

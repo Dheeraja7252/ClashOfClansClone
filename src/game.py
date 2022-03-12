@@ -1,6 +1,7 @@
 from time import monotonic as clock
 
 from src.barbarian import Barbarian
+from src.cannon import Cannon
 from src.game_obj import GameObject
 from src.keyboard import KeyBoard
 from src.input import *
@@ -11,7 +12,7 @@ from src.utils import *
 
 
 # Tasks left:
-# Cannons
+# modify cannons?
 # Game speed
 # Spells?
 # Replays
@@ -44,6 +45,11 @@ class Game:
         for i in range(len(SPAWN_POINTS)):
             self._screen.mark_point(SPAWN_POINTS[i][0], SPAWN_POINTS[i][1], MARK_SPAWN[i])
 
+        self._cannons = []
+        for cannon_pos in CANNON_POS:
+            cannon = Cannon(cannon_pos[0], cannon_pos[1])
+            self._cannons.append(cannon)
+
         self._kb = KeyBoard()
         # self._kb_input = Get()
 
@@ -54,6 +60,7 @@ class Game:
 
             self.handle_kb_input()
             self.troops_attack()
+            self.cannons_fire()
             self.purge_game_objects()
             self.move_troops()
             self.handle_collisions()
@@ -82,6 +89,10 @@ class Game:
         for barb in self._barbarians:
             pos_x, pos_y = barb.get_position()
             self._screen.add_object(pos_x, pos_y, barb._object)
+
+        for cannon in self._cannons:
+            pos_x, pos_y = cannon.get_position()
+            self._screen.add_object(pos_x, pos_y, cannon._object)
 
     # TODO: use tut input class
     def handle_kb_input(self):
@@ -235,3 +246,16 @@ class Game:
             #         wall.deal_damage(barb.damage)
             #         barb.last_attack_time = cur_time
             #         break
+
+    def cannons_fire(self):
+        for cannon in self._cannons:
+            if clock() < cannon.last_fired + CANNON_COOL_OFF:
+                continue
+
+            target = self._king
+            for barb in self._barbarians:
+                if get_distance(barb, cannon) < get_distance(target, cannon):
+                    target = barb
+            if get_distance(target, cannon) <= cannon.range:
+                target.deal_damage(cannon.damage)
+                cannon.last_fired = clock()

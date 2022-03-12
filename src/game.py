@@ -4,7 +4,6 @@ from src.barbarian import Barbarian
 from src.cannon import Cannon
 from src.game_obj import GameObject
 from src.keyboard import KeyBoard
-from src.input import *
 from src.king import King
 from src.screen import Screen
 from src.constants import *
@@ -17,6 +16,7 @@ from src.utils import *
 # Spells?
 # Replays
 # colour based on health
+# score, health display
 
 class Game:
     def __init__(self):
@@ -51,7 +51,6 @@ class Game:
             self._cannons.append(cannon)
 
         self._kb = KeyBoard()
-        # self._kb_input = Get()
 
     def render(self):
         frame = 0
@@ -94,13 +93,11 @@ class Game:
             pos_x, pos_y = cannon.get_position()
             self._screen.add_object(pos_x, pos_y, cannon._object)
 
-    # TODO: use tut input class
     def handle_kb_input(self):
         if not key_press():
             return
 
         ch = getch()
-        # ch = input_to(getch(), 0)
 
         if ch == 'q':
             self.game_over(False)
@@ -115,7 +112,7 @@ class Game:
         flush()
 
     def game_over(self, win):
-        # print(CLEAR)
+        print(CLEAR)
         if win:
             print("win")
         else:

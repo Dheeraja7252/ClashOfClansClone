@@ -14,7 +14,6 @@ from src.utils import *
 
 # TODO:
 # Game speed
-# Spells?
 # Replays
 
 class Game:
@@ -67,11 +66,11 @@ class Game:
 
             while clock() - start_time < TIME_BW_FRAMES:
                 pass
-            # self._screen.display_map()
-            health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
-            print("Player health: " + health_bar)
-            print("Time played: ", frame)
-            print("Game id : ", self._game_id)
+            self._screen.display_map(self._king.get_health(), frame, self._game_id)
+            # health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
+            # print("Player health: " + health_bar)
+            # print("Time played: ", frame)
+            # print("Game ID: ", self._game_id)
             frame += 1
 
     def _draw_objects(self):
@@ -99,6 +98,8 @@ class Game:
 
         if ch == 'q':
             self.game_over(False)
+        if ch == 'h':
+            self.heal()
         if ch in self._king.controls:
             self._king.move(ch)
         if ch == ' ':
@@ -124,6 +125,7 @@ class Game:
             print(Fore.RED)
             print_centered("You Lose!")
             print(Fore.RESET)
+        print_centered("Game ID: " + str(self._game_id))
 
         for _ in range(int(self._height / 2)):
             print('')
@@ -261,3 +263,9 @@ class Game:
                 target.deal_damage(cannon.damage)
                 cannon.last_fired = clock()
                 cannon.style = Style.BRIGHT
+
+    def heal(self):
+        self._king.heal(int(self._king.get_health()/2))
+        for barb in self._barbarians:
+            barb.heal(int(barb.get_health() / 2))
+

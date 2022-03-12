@@ -12,10 +12,12 @@ class GameObject:
         self._width = width
         self._object = np.array([[ch for j in range(width)] for i in range(height)], dtype='object')
         self._health = health
+        self._max_health = health
         self._last_move = [0, 0]
         self.fore = Fore.GREEN
         self.back = Back.RESET
         self.style = Style.NORMAL
+
 
     def get_position(self):
         return self._pos_x, self._pos_y
@@ -42,3 +44,6 @@ class GameObject:
     def undo_last_move(self):
         self._pos_x -= self._last_move[0]
         self._pos_y -= self._last_move[1]
+
+    def heal(self, inc):
+        self._health = min(self._health + inc, self._max_health)

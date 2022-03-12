@@ -4,6 +4,7 @@ from colorama import Fore, Back, Style
 
 from src.cannon import Cannon
 from src.king import King
+from src.utils import progress_bar
 
 
 class Screen:
@@ -54,10 +55,16 @@ class Screen:
         if pos_x in range(self._height) and pos_y in range(self._width):
             self._base_map[pos_x][pos_y] = ch
 
-    def display_map(self):
+    def display_map(self, king_health, time_played, game_id):
         print(utils.RESET_CURSOR)
         for i in range(self._height):
             for j in range(self._width):
                 print(self._map[i][j], end='')
             print("")
+
+        health_bar = progress_bar(king_health, utils.KING_MAX_HEALTH, 20)
+        print("Player health: " + health_bar)
+        print("Time played: ", time_played)
+        print("Game ID: ", game_id)
+
         # print(self._map)

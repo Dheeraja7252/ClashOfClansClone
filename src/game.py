@@ -66,17 +66,24 @@ class Game:
 
             while clock() - start_time < TIME_BW_FRAMES:
                 pass
-            self._screen.display_map(self._king.get_health(), int(frame * TIME_BW_FRAMES), self._game_id)
+            health = 0
+            if self._king:
+                health = self._king.get_health()
+            self._screen.display_map(health, int(frame * TIME_BW_FRAMES), self._game_id)
             # health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
             # print("Player health: " + health_bar)
             # print("Time played: ", frame)
             # print("Game ID: ", self._game_id)
+
+            for can in self._cannons:
+                print(can.get_health())
             frame += 1
 
     def _draw_objects(self):
         self._screen.clear_map()
 
-        self._screen.add_object(self._king)
+        if self._king:
+            self._screen.add_object(self._king)
 
         for wall in self._walls:
             self._screen.add_object(wall)
@@ -100,10 +107,13 @@ class Game:
             self.game_over(False)
         if ch == 'h':
             self.heal()
-        if ch in self._king.controls:
-            self._king.move(ch)
-        if ch == ' ':
-            self._king_attack()
+
+        if self._king:
+            if ch in self._king.controls:
+                self._king.move(ch)
+            if ch == ' ':
+                self._king_attack()
+
         if ch in ['1', '2', '3']:
             ind = int(ch) - 1
             self.spawn_troops(self._spawning_points[ind][0], self._spawning_points[ind][1])
@@ -115,7 +125,6 @@ class Game:
         print(RESET_CURSOR)
         for _ in range(int(self._height/2)):
             print('')
-
 
         if win:
             print(Fore.GREEN)
@@ -138,6 +147,9 @@ class Game:
         self._barbarian_collisions()
 
     def _king_collisions(self):
+        if self._king is None:
+            return
+
         for obj in self._walls:
             if check_collision(self._king, obj):
                 self._king.undo_last_move()
@@ -167,6 +179,9 @@ class Game:
                     barb.undo_last_move()
 
     def _king_attack(self):
+        if self._king is None:
+            return
+
         for obj in self._walls:
             if get_distance(self._king, obj) <= self._king.attack_aoe:
                 obj.deal_damage(self._king.damage)
@@ -175,8 +190,12 @@ class Game:
             if get_distance(self._king, obj) <= self._king.attack_aoe:
                 obj.deal_damage(self._king.damage)
 
+        for obj in self._cannons:
+            if get_distance(self._king, obj) <= self._king.attack_aoe:
+                obj.deal_damage(self._king.damage)
+
     def purge_game_objects(self):
-        if self._king.get_health() <= 0:
+        if self._king and self._king.get_health() <= 0:
             self._king = None
 
         new_barb = []
@@ -196,6 +215,13 @@ class Game:
             if building.get_health() > 0:
                 new_buildings.append(building)
         self._buildings = new_buildings
+
+        new_cannons = []
+        for cannon in self._cannons:
+            if cannon.get_health() > 0:
+                new_cannons.append(cannon)
+        self._cannons = new_cannons
+
 
         if self._king is None and len(self._barbarians) == 0:
             self.game_over(False)
@@ -221,6 +247,12 @@ class Game:
                 elif get_distance(barb, building) < get_distance(barb, closest):
                     closest = building
 
+            for cannon in self._cannons:
+                if closest is None:
+                    closest = cannon
+                elif get_distance(barb, cannon) < get_distance(barb, closest):
+                    closest = cannon
+
             barb_pos_x, barb_pos_y = barb.get_position()
             build_pos_x, build_pos_y = closest.get_position()
             width, height = closest.get_dim()
@@ -244,6 +276,16 @@ class Game:
         for barb in self._barbarians:
             if cur_time < barb.last_attack_time + BARB_ATTACK_TIMESTEP:
                 continue
+
+            for cannon in self._cannons:
+                if get_distance(barb, cannon) < 1:
+                    cannon.deal_damage(barb.damage)
+                    barb.last_attack_time = cur_time
+                    break
+
+            if barb.last_attack_time == cur_time:
+                continue
+
             for building in self._buildings:
                 if get_distance(barb, building) < 1:
                     building.deal_damage(barb.damage)
@@ -257,15 +299,16 @@ class Game:
 
             target = self._king
             for barb in self._barbarians:
-                if get_distance(barb, cannon) < get_distance(target, cannon):
+                if not target or get_distance(barb, cannon) < get_distance(target, cannon):
                     target = barb
-            if get_distance(target, cannon) <= cannon.range:
+            if target and get_distance(target, cannon) <= cannon.range:
                 target.deal_damage(cannon.damage)
                 cannon.last_fired = clock()
                 cannon.style = Style.BRIGHT
 
     def heal(self):
-        self._king.heal(int(self._king.get_health()/2))
+        if self._king:
+            self._king.heal(int(self._king.get_health()/2))
         for barb in self._barbarians:
             barb.heal(int(barb.get_health() / 2))
 

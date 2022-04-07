@@ -66,7 +66,7 @@ class Game:
 
             while clock() - start_time < TIME_BW_FRAMES:
                 pass
-            self._screen.display_map(self._king.get_health(), frame, self._game_id)
+            self._screen.display_map(self._king.get_health(), int(frame * TIME_BW_FRAMES), self._game_id)
             # health_bar = progress_bar(self._king.get_health(), KING_MAX_HEALTH, 20)
             # print("Player health: " + health_bar)
             # print("Time played: ", frame)

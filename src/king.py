@@ -1,3 +1,4 @@
+from time import monotonic as clock
 from src.constants import *
 from src.game_obj import GameObject
 # from colorama import Fore, Back, Style
@@ -8,8 +9,12 @@ class King(GameObject):
         self.controls = ['w', 'a', 's', 'd']
         self.damage = KING_DAMAGE
         self.attack_aoe = KING_ATTACK_AOE
+        self.last_moved = 0
+        self.speed = KING_SPEED
 
     def move(self, ch):
+        if clock() - self.last_moved < 1/self.speed:
+            return
         if ch == 'w':
             self._pos_x -= 1
             self.set_last_move(-1, 0)
@@ -22,3 +27,4 @@ class King(GameObject):
         if ch == 'd':
             self._pos_y += 1
             self.set_last_move(0, 1)
+        self.last_moved = clock()

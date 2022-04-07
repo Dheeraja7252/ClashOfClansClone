@@ -9,3 +9,10 @@ class Cannon(GameObject):
         self.last_fired = 0
         self.range = CANNON_RANGE
         self.fore = Fore.RESET
+
+    def deal_damage(self, damage):
+        self._health -= damage
+        for i in range(len(HEALTH_RANGE) - 1):
+            if 100 * self._health / self._max_health <= HEALTH_RANGE[i]:
+                self.fore = OBJECT_COLOUR[i]
+                break

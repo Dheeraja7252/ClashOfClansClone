@@ -13,8 +13,8 @@ BORDER_CHAR = '#'
 
 TIME_BW_FRAMES = 0.1
 
-HEALTH_RANGE = [30, 60]
-OBJECT_COLOUR = [Fore.RED, Fore.YELLOW]
+HEALTH_RANGE = [30, 60, 100]
+OBJECT_COLOUR = [Fore.RED, Fore.YELLOW, Fore.GREEN]
 
 # Game object properties
 KING_HEIGHT = 1

@@ -75,8 +75,6 @@ class Game:
             # print("Time played: ", frame)
             # print("Game ID: ", self._game_id)
 
-            for can in self._cannons:
-                print(can.get_health())
             frame += 1
 
     def _draw_objects(self):

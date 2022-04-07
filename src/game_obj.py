@@ -47,3 +47,7 @@ class GameObject:
 
     def heal(self, inc):
         self._health = min(self._health + inc, self._max_health)
+        for i in range(len(HEALTH_RANGE)):
+            if 100 * self._health / self._max_health <= HEALTH_RANGE[i]:
+                self.fore = OBJECT_COLOUR[i]
+                break

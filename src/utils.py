@@ -76,3 +76,6 @@ def print_centered(text):
 
 def gen_game_id():
     return ''.join(choice(string.ascii_uppercase + string.digits) for _ in range(GAME_ID_LEN))
+
+def filename_by_id(id):
+    return 'replay-' + id + ".txt"
